@@ -35,7 +35,10 @@ export default defineComponent({
       h(
         'li',
         {
-          style: {width: `${100 / config.itemsToShow}%`},
+          style: {
+            width: `${100 / config.itemsToShow}%`,
+            'transition-duration': `${config.transition}ms`,
+          },
           class: {
             carousel__slide: true,
             'carousel__slide--clone': props.isClone,

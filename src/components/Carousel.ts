@@ -349,6 +349,12 @@ export default defineComponent({
     provide('slidesToScroll', slidesToScroll)
 
     const trackStyle = computed((): ElementStyleObject => {
+      if (props.fade) {
+        return {
+          transition: `${isSliding.value ? config.transition : 0}ms`,
+        }
+      }
+
       const direction = config.dir === 'rtl' ? -1 : 1
       const xScroll = slidesToScroll.value * slideWidth.value * direction
       return {
@@ -451,8 +457,8 @@ export default defineComponent({
       const trackEl = h(
         'ol',
         {
-          class: 'carousel__track',
-          style: trackStyle.value,
+          class: !props.fade ? 'carousel__track' : 'carousel__fade-track',
+          style: !props.fade ? trackStyle.value : {},
           onMousedownCapture: config.mouseDrag ? handleDragStart : null,
           onTouchstartPassiveCapture: config.touchDrag ? handleDragStart : null,
         },
