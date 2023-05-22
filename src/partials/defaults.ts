@@ -25,4 +25,5 @@ export const defaultConfigs: CarouselConfig = {
     iconArrowRight: 'Arrow pointing to the right',
     iconArrowLeft: 'Arrow pointing to the left',
   },
+  fade: false,
 }

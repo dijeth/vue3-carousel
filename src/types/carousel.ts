@@ -30,6 +30,7 @@ export interface CarouselConfig {
   breakpoints?: Breakpoints
   settings?: Partial<CarouselConfig>
   i18n: { [key in I18nKeys]?: string }
+  fade?: boolean
 }
 
 export interface CarouselNav {

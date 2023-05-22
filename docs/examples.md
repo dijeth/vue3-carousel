@@ -340,17 +340,19 @@ export default defineComponent({
 
 ```vue
 <template>
-  <Carousel :i18n="{
-    'ariaNextSlide': 'Zur nächsten Slide',
-    'ariaPreviousSlide': 'Zur vorherigen Slide',
-    'ariaNavigateToSlide': 'Springe zu Slide {slideNumber}',
-    'ariaGallery': 'Galerie',
-    'itemXofY': 'Slide {currentSlide} von {slidesCount}',
-    'iconArrowUp': 'Pfeil nach oben',
-    'iconArrowDown': 'Pfeil nach unten',
-    'iconArrowRight': 'Pfeil nach rechts',
-    'iconArrowLeft': 'Pfeil nach links',
-  }">
+  <Carousel
+    :i18n="{
+      ariaNextSlide: 'Zur nächsten Slide',
+      ariaPreviousSlide: 'Zur vorherigen Slide',
+      ariaNavigateToSlide: 'Springe zu Slide {slideNumber}',
+      ariaGallery: 'Galerie',
+      itemXofY: 'Slide {currentSlide} von {slidesCount}',
+      iconArrowUp: 'Pfeil nach oben',
+      iconArrowDown: 'Pfeil nach unten',
+      iconArrowRight: 'Pfeil nach rechts',
+      iconArrowLeft: 'Pfeil nach links',
+    }"
+  >
     ...
   </Carousel>
 </template>
@@ -406,6 +408,66 @@ export default defineComponent({
 </script>
 ```
 
+## [Fade Example](https://github.com/ismail9k/vue3-carousel/blob/master/docs/examples/ExampleBasic.vue)
+
+<ExampleFade></ExampleFade>
+
+```vue
+<template>
+  <Carousel :fade="true" :transition="2000">
+    <Slide v-for="slide in 10" :key="slide">
+      <div class="carousel__item">{{ slide }}</div>
+    </Slide>
+
+    <template #addons>
+      <Navigation />
+      <Pagination />
+    </template>
+  </Carousel>
+</template>
+
+<script>
+import { defineComponent } from 'vue'
+import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
+
+import 'vue3-carousel/dist/carousel.css'
+
+export default defineComponent({
+  name: 'Basic',
+  components: {
+    Carousel,
+    Slide,
+    Pagination,
+    Navigation,
+  },
+})
+</script>
+
+<style>
+.carousel__item {
+  min-height: 200px;
+  width: 100%;
+  background-color: var(--vc-clr-primary);
+  color: var(--vc-clr-white);
+  font-size: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel__slide {
+  padding: 10px;
+}
+
+.carousel__prev,
+.carousel__next {
+  box-sizing: content-box;
+  border: 5px solid white;
+}
+</style>
+```
+
 <script>
 import ExampleBasic from './examples/ExampleBasic.vue';
 import ExampleWrapAround from './examples/ExampleWrapAround.vue';
@@ -416,8 +478,10 @@ import ExampleActiveClasses from './examples/ExampleActiveClasses.vue';
 import ExampleCustomNavigation from './examples/ExampleCustomNavigation.vue';
 import ExampleCustomLabels from './examples/ExampleCustomLabels.vue';
 import ExampleGallery from './examples/ExampleGallery.vue';
+import ExampleFade from './examples/ExampleFade.vue';
 
 import '../dist/carousel.css'
+
 export default {
   components: {
     ExampleBasic,
@@ -429,6 +493,7 @@ export default {
     ExampleCustomNavigation,
     ExampleCustomLabels,
     ExampleGallery,
+    ExampleFade,
   }
 }
 </script>

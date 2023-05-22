@@ -84,4 +84,9 @@ export const carouselProps = {
     },
     type: Object,
   },
+  // set "fade" transition type
+  fade: {
+    default: defaultConfigs.fade,
+    type: Boolean,
+  },
 }
