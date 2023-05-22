@@ -20,6 +20,11 @@
   position: relative;
 }
 
+.carousel__fade-track {
+  padding: 0 !important;
+  position: relative;
+}
+
 .carousel__viewport {
   overflow: hidden;
 }
