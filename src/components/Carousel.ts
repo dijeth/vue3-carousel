@@ -296,24 +296,25 @@ export default defineComponent({
       prevSlideIndex.value = currentSlideIndex.value
       currentSlideIndex.value = currentVal
 
-      transitionTimer = setTimeout((): void => {
-        if (config.wrapAround) {
-          const mappedNumber = mapNumberToRange({
-            val: currentVal,
-            max: maxSlideIndex.value,
-            min: 0,
+      if (config.wrapAround) {
+        const mappedNumber = mapNumberToRange({
+          val: currentVal,
+          max: maxSlideIndex.value,
+          min: 0,
+        })
+
+        if (mappedNumber !== currentSlideIndex.value) {
+          currentSlideIndex.value = mappedNumber
+          emit('loop', {
+            currentSlideIndex: currentSlideIndex.value,
+            slidingToIndex: slideIndex,
           })
-
-          if (mappedNumber !== currentSlideIndex.value) {
-            currentSlideIndex.value = mappedNumber
-            emit('loop', {
-              currentSlideIndex: currentSlideIndex.value,
-              slidingToIndex: slideIndex,
-            })
-          }
         }
+      }
 
-        emit('update:modelValue', currentSlideIndex.value)
+      emit('update:modelValue', currentSlideIndex.value)
+
+      transitionTimer = setTimeout((): void => {
         emit('slide-end', {
           currentSlideIndex: currentSlideIndex.value,
           prevSlideIndex: prevSlideIndex.value,

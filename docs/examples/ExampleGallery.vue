@@ -1,5 +1,5 @@
 <template>
-  <Carousel id="gallery" :items-to-show="1" :wrap-around="false" v-model="currentSlide">
+  <Carousel id="gallery" :items-to-show="1" :wrap-around="true" v-model="currentSlide">
     <Slide v-for="slide in 10" :key="slide">
       <div class="carousel__item">{{ slide }}</div>
     </Slide>
