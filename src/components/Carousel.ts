@@ -40,6 +40,7 @@ export default defineComponent({
     const slides: Ref<any> = ref([])
     const slideWidth: Ref<number> = ref(0)
     const slidesCount: Ref<number> = ref(0)
+    const muted: Ref<boolean> = ref(false)
     // current config
     const config = reactive<CarouselConfig>({ ...defaultConfigs })
     // default carousel configs
@@ -56,6 +57,7 @@ export default defineComponent({
 
     let autoplayTimer: ReturnType<typeof setInterval> | null
     let transitionTimer: ReturnType<typeof setTimeout> | null
+    let muteTimer: ReturnType<typeof setTimeout> | null
 
     provide('config', config)
     provide('slidesCount', slidesCount)
@@ -115,6 +117,17 @@ export default defineComponent({
       updateSlideWidth()
     }, 16)
 
+    const handleDocumentScroll = () => {
+      if (muteTimer) {
+        clearTimeout(muteTimer)
+      }
+
+      muted.value = true
+      muteTimer = setTimeout(() => {
+        muted.value = false
+      }, 150)
+    }
+
     /**
      * Setup functions
      */
@@ -147,6 +160,7 @@ export default defineComponent({
       updateBreakpointsConfigs()
       initAutoplay()
       window.addEventListener('resize', handleWindowResize, { passive: true })
+      document.addEventListener('scroll', handleDocumentScroll, { passive: true })
       emit('init')
     })
 
@@ -159,6 +173,10 @@ export default defineComponent({
       }
 
       window.removeEventListener('resize', handleWindowResize, {
+        passive: true,
+      } as EventListenerOptions)
+
+      document.removeEventListener('resize', handleDocumentScroll, {
         passive: true,
       } as EventListenerOptions)
     })
@@ -181,6 +199,10 @@ export default defineComponent({
     }
 
     function handleDragStart(event: MouseEvent & TouchEvent): void {
+      if (muted.value) {
+        return
+      }
+
       if (
         ['INPUT', 'TEXTAREA', 'SELECT'].includes((event.target as HTMLElement).tagName)
       ) {
@@ -202,6 +224,12 @@ export default defineComponent({
     }
 
     const handleDragging = throttle((event: MouseEvent & TouchEvent): void => {
+      if (muted.value) {
+        dragged.y = 0
+        dragged.x = 0
+        return
+      }
+
       isDragging.value = true
 
       endPosition.x = isTouch ? event.touches[0].clientX : event.clientX
@@ -214,6 +242,10 @@ export default defineComponent({
     }, config.throttle)
 
     function handleDragEnd(): void {
+      if (muted.value) {
+        return
+      }
+
       const direction = config.dir === 'rtl' ? -1 : 1
       const tolerance = Math.sign(dragged.x) * 0.4
       const draggedSlides =
