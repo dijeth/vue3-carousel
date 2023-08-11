@@ -31,6 +31,7 @@ export interface CarouselConfig {
   settings?: Partial<CarouselConfig>
   i18n: { [key in I18nKeys]?: string }
   fade?: boolean
+  tolerance: number
 }
 
 export interface CarouselNav {

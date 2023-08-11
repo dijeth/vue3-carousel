@@ -89,4 +89,9 @@ export const carouselProps = {
     default: defaultConfigs.fade,
     type: Boolean,
   },
+  // set slide transition sensitivity
+  tolerance: {
+    default: 0.4,
+    type: Number,
+  },
 }
