@@ -207,11 +207,6 @@ export default defineComponent({
       startPosition.y = isTouch ? event.touches[0].clientY : event.clientY
 
       document.addEventListener(isTouch ? 'touchmove' : 'mousemove', handleDragging, true)
-      document.addEventListener(isTouch ? 'touchend' : 'mouseup', handleDragEnd, true)
-
-      if (isTouch) {
-        document.addEventListener('scroll', handleDocumentScroll, { once: true })
-      }
     }
 
     const handleDragging = throttle((event: MouseEvent & TouchEvent): void => {
@@ -221,13 +216,26 @@ export default defineComponent({
         return
       }
 
+      const endPositionX = isTouch ? event.touches[0].clientX : event.clientX
+      const endPositionY = isTouch ? event.touches[0].clientY : event.clientY
+      const deltaX = endPositionX - startPosition.x
+      const deltaY = endPositionY - startPosition.y
+
+      // If the finger is moved more vertically then the slide doesn't start dragging
+      // The more value (2) the more horisontal direction is required to start dragging
+      if (Math.abs(deltaX / deltaY) < 2 || Math.abs(deltaX) < 10) {
+        return
+      }
+
       isDragging.value = true
 
-      endPosition.x = isTouch ? event.touches[0].clientX : event.clientX
-      endPosition.y = isTouch ? event.touches[0].clientY : event.clientY
-      const deltaX = endPosition.x - startPosition.x
-      const deltaY = endPosition.y - startPosition.y
+      document.addEventListener(isTouch ? 'touchend' : 'mouseup', handleDragEnd, true)
+      if (isTouch) {
+        document.addEventListener('scroll', handleDocumentScroll, { once: true })
+      }
 
+      endPosition.x = endPositionX
+      endPosition.y = endPositionY
       dragged.y = deltaY
       dragged.x = deltaX
     }, config.throttle)
