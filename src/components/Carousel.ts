@@ -40,7 +40,7 @@ export default defineComponent({
     const slides: Ref<any> = ref([])
     const slideWidth: Ref<number> = ref(0)
     const slidesCount: Ref<number> = ref(0)
-    const scrolling: Ref<boolean> = ref(false)
+    let scrolling = false
     // current config
     const config = reactive<CarouselConfig>({ ...defaultConfigs })
     // default carousel configs
@@ -117,12 +117,8 @@ export default defineComponent({
     }, 16)
 
     const handleDocumentScroll = () => {
-      scrolling.value = true
-    }
-
-    const handleTouchEnd = () => {
-      scrolling.value = false
-      document.removeEventListener('scroll', handleDocumentScroll)
+      scrolling = true
+      document.addEventListener('touchend', () => (scrolling = false), { once: true })
     }
 
     /**
@@ -196,10 +192,13 @@ export default defineComponent({
       ) {
         return
       }
+
       isTouch = event.type === 'touchstart'
+
       if (!isTouch) {
         event.preventDefault()
       }
+
       if ((!isTouch && event.button !== 0) || isSliding.value) {
         return
       }
@@ -211,13 +210,12 @@ export default defineComponent({
       document.addEventListener(isTouch ? 'touchend' : 'mouseup', handleDragEnd, true)
 
       if (isTouch) {
-        document.addEventListener('scroll', handleDocumentScroll)
-        document.addEventListener('touchend', handleTouchEnd)
+        document.addEventListener('scroll', handleDocumentScroll, { once: true })
       }
     }
 
     const handleDragging = throttle((event: MouseEvent & TouchEvent): void => {
-      if (scrolling.value) {
+      if (scrolling) {
         dragged.y = 0
         dragged.x = 0
         return
@@ -235,7 +233,7 @@ export default defineComponent({
     }, config.throttle)
 
     function handleDragEnd(): void {
-      if (scrolling.value) {
+      if (scrolling) {
         return
       }
 
