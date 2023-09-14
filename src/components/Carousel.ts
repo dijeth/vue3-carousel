@@ -207,6 +207,7 @@ export default defineComponent({
       startPosition.y = isTouch ? event.touches[0].clientY : event.clientY
 
       document.addEventListener(isTouch ? 'touchmove' : 'mousemove', handleDragging, true)
+      document.addEventListener(isTouch ? 'touchend' : 'mouseup', handleDragEnd, true)
     }
 
     const handleDragging = throttle((event: MouseEvent & TouchEvent): void => {
@@ -229,7 +230,6 @@ export default defineComponent({
 
       isDragging.value = true
 
-      document.addEventListener(isTouch ? 'touchend' : 'mouseup', handleDragEnd, true)
       if (isTouch) {
         document.addEventListener('scroll', handleDocumentScroll, { once: true })
       }
